@@ -1,0 +1,29 @@
+package com.portfolio.projects.entity;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
+import java.time.Instant;
+
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class User {
+
+    Long id;
+
+    String email;
+
+    String passwordHash;
+
+    String name;
+
+    Instant createdAt;
+
+    Instant updatedAt;
+
+    Instant deletedAt;  //soft delete
+
+}
