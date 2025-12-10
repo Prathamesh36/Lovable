@@ -1,4 +1,4 @@
-package com.portfolio.projects.entity.enums;
+package com.portfolio.projects.enums;
 
 public enum PreviewStatus {
     CREATING, RUNNING, FAILED, TERMINATED

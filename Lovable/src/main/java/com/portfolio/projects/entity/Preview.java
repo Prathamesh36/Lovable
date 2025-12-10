@@ -1,6 +1,6 @@
 package com.portfolio.projects.entity;
 
-import com.portfolio.projects.entity.enums.PreviewStatus;
+import com.portfolio.projects.enums.PreviewStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

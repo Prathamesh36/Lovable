@@ -1,6 +1,6 @@
 package com.portfolio.projects.entity;
 
-import com.portfolio.projects.entity.enums.SubscriptionStatus;
+import com.portfolio.projects.enums.SubscriptionStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

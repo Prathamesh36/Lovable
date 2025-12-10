@@ -1,6 +1,6 @@
 package com.portfolio.projects.entity;
 
-import com.portfolio.projects.entity.enums.MessageRole;
+import com.portfolio.projects.enums.MessageRole;
 
 import java.time.Instant;
 
