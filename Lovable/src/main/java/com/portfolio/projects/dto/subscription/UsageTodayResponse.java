@@ -1,9 +1,9 @@
 package com.portfolio.projects.dto.subscription;
 
 public record UsageTodayResponse(
-        int tokensUsed,
-        int tokenLimit,
-        int previewRunning,
-        int previewLimit
+        Integer tokensUsed,
+        Integer tokenLimit,
+        Integer previewRunning,
+        Integer previewLimit
 ) {
 }
