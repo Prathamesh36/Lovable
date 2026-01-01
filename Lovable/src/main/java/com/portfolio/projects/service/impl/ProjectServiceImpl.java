@@ -13,6 +13,7 @@ import com.portfolio.projects.entity.User;
 import com.portfolio.projects.enums.ProjectRole;
 import com.portfolio.projects.error.ResourceNotFoundException;
 import com.portfolio.projects.mapper.ProjectMapper;
+import com.portfolio.projects.security.AuthUtil;
 import com.portfolio.projects.service.ProjectService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectResponse createProject(ProjectRequest request) {
-
+        Long userId = authUtil.getCurrentUserId();
         User owner = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User", userId.toString())
         );
@@ -76,18 +77,24 @@ public class ProjectServiceImpl implements ProjectService {
 //                .map(project -> projectMapper.toProjectSummaryResponse(project))
 //                .collect(Collectors.toList());
 
+        Long userId = authUtil.getCurrentUserId();
+
         var projects = projectRepository.findAllAccessibleByUser(userId);
         return projectMapper.toListOfProjectSummaryResponse(projects);
     }
 
     @Override
     public ProjectResponse getUserProjectById(Long id) {
+
+        Long userId = authUtil.getCurrentUserId();
         Project project = getAccessibleProjectById(id, userId);
         return projectMapper.toProjectResponse(project);
     }
 
     @Override
     public ProjectResponse updateProject(Long id, ProjectRequest request) {
+
+        Long userId = authUtil.getCurrentUserId();
         Project project = getAccessibleProjectById(id, userId);
 
         project.setName(request.name());
@@ -98,6 +105,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void softDelete(Long id) {
+        Long userId = authUtil.getCurrentUserId();
         Project project = getAccessibleProjectById(id, userId);
 
         project.setDeletedAt(Instant.now());
