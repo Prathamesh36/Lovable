@@ -1,6 +1,7 @@
 package com.portfolio.projects.controller;
 
 import com.portfolio.projects.dto.subscription.*;
+import com.portfolio.projects.service.PaymentProcessor;
 import com.portfolio.projects.service.PlanService;
 import com.portfolio.projects.service.SubscriptionService;
 import lombok.AccessLevel;
@@ -21,6 +22,7 @@ public class BillingController {
 
     PlanService planService;
     SubscriptionService subscriptionService;
+    PaymentProcessor paymentProcessor;
 
     @GetMapping("/api/plans")
     public ResponseEntity<List<PlanResponse>> getAllPlans(){
@@ -33,17 +35,17 @@ public class BillingController {
         return ResponseEntity.ok(subscriptionService.getCurrentSubscription(userId));
     }
 
-    @PostMapping
+    @PostMapping("/api/payments/checkout")
     public ResponseEntity<CheckoutResponse> createCheckoutResponse(
             @RequestBody CheckoutRequest request
     ){
-        Long userId = 1L;
-        return ResponseEntity.ok(subscriptionService.createCheckoutSessionUrl(request, userId));
+
+        return ResponseEntity.ok(paymentProcessor.createCheckoutSessionUrl(request));
     }
 
     @PostMapping("/api/stripe/portal")
     public ResponseEntity<PortalResponse> openCustomerPortal(){
         Long userId = 1L;
-        return ResponseEntity.ok(subscriptionService.openCustomerPortal(userId));
+        return ResponseEntity.ok(paymentProcessor.openCustomerPortal(userId));
     }
 }
