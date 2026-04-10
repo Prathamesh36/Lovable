@@ -1,5 +1,5 @@
 package com.portfolio.projects.enums;
 
 public enum SubscriptionStatus {
-    ACTIVE, TRAILING, CANCELLED, PAST_DUE, INCOMPLETE
+    ACTIVE, TRIALING, CANCELED, PAST_DUE, INCOMPLETE
 }

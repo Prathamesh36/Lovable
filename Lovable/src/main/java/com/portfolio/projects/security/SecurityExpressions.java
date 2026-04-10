@@ -2,7 +2,6 @@ package com.portfolio.projects.security;
 
 import com.portfolio.projects.Repository.ProjectMemberRepository;
 import com.portfolio.projects.enums.ProjectPermission;
-import com.portfolio.projects.enums.ProjectRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -11,13 +10,13 @@ import org.springframework.stereotype.Component;
 public class SecurityExpressions {
 
     private final ProjectMemberRepository projectMemberRepository;
-
     private final AuthUtil authUtil;
 
-    private boolean hasPermission(Long projectId, ProjectPermission projectPermission){
+    private boolean hasPermission(Long projectId, ProjectPermission projectPermission) {
         Long userId = authUtil.getCurrentUserId();
-        return projectMemberRepository.findRolesByProjectIdAndUserId(projectId, userId)
-                .map(role -> role.getPermission().contains(projectPermission))
+
+        return projectMemberRepository.findRoleByProjectIdAndUserId(projectId, userId).
+                map(role -> role.getPermissions().contains(projectPermission))
                 .orElse(false);
     }
 

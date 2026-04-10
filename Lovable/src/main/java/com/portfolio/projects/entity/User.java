@@ -32,6 +32,9 @@ public class User implements UserDetails {
 
     String name;
 
+    @Column(unique = true)
+    String stripeCustomerId;
+
     @CreationTimestamp
     Instant createdAt;
 
@@ -44,4 +47,6 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
+
 }
+

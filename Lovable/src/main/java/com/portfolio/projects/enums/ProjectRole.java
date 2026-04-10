@@ -10,13 +10,14 @@ import static com.portfolio.projects.enums.ProjectPermission.*;
 @RequiredArgsConstructor
 @Getter
 public enum ProjectRole {
-    EDITOR(EDIT, VIEW, DELETE, VIEW_MEMBERS),
-    VIEWER(VIEW, VIEW_MEMBERS),
-    OWNER(VIEW, EDIT, DELETE, MANAGE_MEMBERS, VIEW_MEMBERS);
 
-    ProjectRole(ProjectPermission... permission) {
-        this.permission = Set.of(permission);
+    EDITOR(VIEW, EDIT, DELETE, VIEW_MEMBERS),
+    VIEWER(Set.of(VIEW, VIEW_MEMBERS)),
+    OWNER(Set.of(VIEW, EDIT, DELETE, MANAGE_MEMBERS, VIEW_MEMBERS));
+
+    ProjectRole(ProjectPermission... permissions) {
+        this.permissions = Set.of(permissions);
     }
 
-    private final Set<ProjectPermission> permission;
+    private final Set<ProjectPermission> permissions;
 }
