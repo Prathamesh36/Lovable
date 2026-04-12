@@ -16,6 +16,7 @@ import com.portfolio.projects.error.ResourceNotFoundException;
 import com.portfolio.projects.mapper.ProjectMapper;
 import com.portfolio.projects.security.AuthUtil;
 import com.portfolio.projects.service.ProjectService;
+import com.portfolio.projects.service.ProjectTemplateService;
 import com.portfolio.projects.service.SubscriptionService;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
@@ -40,6 +41,7 @@ public class ProjectServiceImpl implements ProjectService {
     ProjectMemberRepository projectMemberRepository;
     AuthUtil authUtil;
     SubscriptionService subscriptionService;
+    ProjectTemplateService projectTemplateService;
 
     @Override
     public ProjectResponse createProject(ProjectRequest request) {
@@ -70,6 +72,8 @@ public class ProjectServiceImpl implements ProjectService {
                 .project(project)
                 .build();
         projectMemberRepository.save(projectMember);
+
+        projectTemplateService.initializeProjectFromTemplate(project.getId());
 
         return projectMapper.toProjectResponse(project);
     }
@@ -112,9 +116,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     ///  INTERNAL FUNCTIONS
+
     public Project getAccessibleProjectById(Long projectId, Long userId) {
         return projectRepository.findAccessibleProjectById(projectId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Project", projectId.toString()));
     }
 }
+
 

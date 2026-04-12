@@ -2,6 +2,7 @@ package com.portfolio.projects.service.impl;
 
 import com.portfolio.projects.llm.PromptUtils;
 import com.portfolio.projects.llm.advisors.FileTreeContextAdvisor;
+import com.portfolio.projects.llm.tools.CodeGenerationTools;
 import com.portfolio.projects.security.AuthUtil;
 import com.portfolio.projects.service.AiGenerationService;
 import com.portfolio.projects.service.ProjectFileService;
@@ -28,8 +29,7 @@ public class AiGenerationServiceImpl implements AiGenerationService {
     private final ProjectFileService projectFileService;
     private final FileTreeContextAdvisor fileTreeContextAdvisor;
 
-    private static final Pattern FILE_TAG_PATTERN = Pattern.compile("<file path=\"([^\"]+)\">(.*?)</file>",
-            Pattern.DOTALL);
+    private static final Pattern FILE_TAG_PATTERN = Pattern.compile("<file path=\"([^\"]+)\">(.*?)</file>", Pattern.DOTALL);
 
     @Override
     @PreAuthorize("@security.canEditProject(#projectId)")
@@ -44,10 +44,12 @@ public class AiGenerationServiceImpl implements AiGenerationService {
 
         StringBuilder fullResponseBuffer = new StringBuilder();
 
+        CodeGenerationTools codeGenerationTools = new CodeGenerationTools(projectFileService, projectId);
+
         return chatClient.prompt()
                 .system(PromptUtils.CODE_GENERATION_SYSTEM_PROMPT)
                 .user(userMessage)
-
+                .tools(codeGenerationTools)
                 .advisors(advisorSpec -> {
                             advisorSpec.params(advisorParams);
                             advisorSpec.advisors(fileTreeContextAdvisor);
@@ -67,6 +69,7 @@ public class AiGenerationServiceImpl implements AiGenerationService {
                 .doOnError(error -> log.error("Error during streaming for projectId: {}", projectId))
                 .map(response -> Objects.requireNonNull(response.getResult().getOutput().getText()));
     }
+
 
 
     private void parseAndSaveFiles(String fullResponse, Long projectId) {
