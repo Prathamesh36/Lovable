@@ -9,8 +9,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-//    @Mapping(target = "name", source = "name")
     User toEntity(SignupRequest signupRequest);
 
     UserProfileResponse toUserProfileResponse(User user);
+
 }

@@ -1,7 +1,8 @@
 package com.portfolio.projects.service;
 
+import com.portfolio.projects.dto.chat.StreamResponse;
 import reactor.core.publisher.Flux;
 
 public interface AiGenerationService {
-    Flux<String> streamResponse(String message, Long projectId);
+    Flux<StreamResponse> streamResponse(String message, Long projectId);
 }

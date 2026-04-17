@@ -1,12 +1,12 @@
 package com.portfolio.projects.service;
 
 import com.portfolio.projects.dto.project.FileContentResponse;
-import com.portfolio.projects.dto.project.FileNode;
+import com.portfolio.projects.dto.project.FileTreeResponse;
 
 import java.util.List;
 
 public interface ProjectFileService {
-    List<FileNode> getFileTree(Long projectId);
+    FileTreeResponse getFileTree(Long projectId);
 
     FileContentResponse getFileContent(Long projectId, String path);
 

@@ -1,6 +1,5 @@
 package com.portfolio.projects.Repository;
 
-
 import com.portfolio.projects.entity.ChatMessage;
 import com.portfolio.projects.entity.ChatSession;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,15 +18,11 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
     List<ChatMessage> findByChatSession(ChatSession chatSession);
 }
 
-
-//N+1 Query problem
+// N+1 Query problem
 // chat_messages Query 1
 // chat_events with chat_message id: 1
 // chat_events with chat_message id: 2
 // chat_events with chat_message id: 3
 // chat_events with chat_message id: 4
-//..
+// ..
 // chat_events with chat_message id: N
-
-
-

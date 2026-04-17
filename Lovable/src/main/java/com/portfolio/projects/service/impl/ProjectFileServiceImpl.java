@@ -4,6 +4,7 @@ import com.portfolio.projects.Repository.ProjectFileRepository;
 import com.portfolio.projects.Repository.ProjectRepository;
 import com.portfolio.projects.dto.project.FileContentResponse;
 import com.portfolio.projects.dto.project.FileNode;
+import com.portfolio.projects.dto.project.FileTreeResponse;
 import com.portfolio.projects.entity.Project;
 import com.portfolio.projects.entity.ProjectFile;
 import com.portfolio.projects.error.ResourceNotFoundException;
@@ -39,10 +40,12 @@ public class ProjectFileServiceImpl implements ProjectFileService {
 
     private static final String BUCKET_NAME = "projects";
 
+
     @Override
-    public List<FileNode> getFileTree(Long projectId) {
+    public FileTreeResponse getFileTree(Long projectId) {
         List<ProjectFile> projectFileList = projectFileRepository.findByProjectId(projectId);
-        return projectFileMapper.toListOfFileNode(projectFileList);
+        List<FileNode> projectFileNodes = projectFileMapper.toListOfFileNode(projectFileList);
+        return new FileTreeResponse(projectFileNodes);
     }
 
     @Override
@@ -113,3 +116,4 @@ public class ProjectFileServiceImpl implements ProjectFileService {
         return "text/plain";
     }
 }
+

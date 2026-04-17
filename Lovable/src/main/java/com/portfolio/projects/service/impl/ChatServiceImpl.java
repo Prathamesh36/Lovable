@@ -30,9 +30,7 @@ public class ChatServiceImpl implements ChatService {
     public List<ChatResponse> getProjectChatHistory(Long projectId) {
         Long userId = authUtil.getCurrentUserId();
 
-        ChatSession chatSession = chatSessionRepository.getReferenceById(
-                new ChatSessionId(projectId, userId)
-        );
+        ChatSession chatSession = chatSessionRepository.getReferenceById(new ChatSessionId(projectId, userId));
 
         List<ChatMessage> chatMessageList = chatMessageRepository.findByChatSession(chatSession);
 

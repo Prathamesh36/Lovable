@@ -22,14 +22,11 @@ import java.util.List;
 @Table(name = "users")
 public class User implements UserDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     String username;
-
     String password;
-
     String name;
 
     @Column(unique = true)
@@ -41,12 +38,10 @@ public class User implements UserDetails {
     @UpdateTimestamp
     Instant updatedAt;
 
-    Instant deletedAt;  //soft delete
+    Instant deletedAt; //soft delete
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
-
 }
-
