@@ -1,0 +1,2 @@
+com.portfolio.project.common_lib.error.SharedExceptionAutoConfiguration
+com.portfolio.project.common_lib.security.SharedSecurityAutoConfiguration
