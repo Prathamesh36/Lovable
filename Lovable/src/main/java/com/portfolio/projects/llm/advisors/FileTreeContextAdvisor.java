@@ -51,17 +51,14 @@ public class FileTreeContextAdvisor implements StreamAdvisor {
 
         List<Message> allMessages = new ArrayList<>();
 
-        String combinedSystemContext = "";
-
         // Add original system message
         if (systemMessage != null) {
-            combinedSystemContext += systemMessage.getText();
+            allMessages.add(systemMessage);
         }
 
         List<FileNode> fileTree = projectFileService.getFileTree(projectId).files();
-        combinedSystemContext += "\n\n ---- FILE_TREE ----\n" + fileTree.toString();
-        
-        allMessages.add(new SystemMessage(combinedSystemContext));
+        String fileTreeContext = "\n\n ---- FILE_TREE ----\n" + fileTree.toString();
+        allMessages.add(new SystemMessage(fileTreeContext));
 
         allMessages.addAll(userMessages);
 
@@ -70,7 +67,6 @@ public class FileTreeContextAdvisor implements StreamAdvisor {
                 .prompt(new Prompt(allMessages, request.prompt().getOptions()))
                 .build();
     }
-
 
     @Override
     public String getName() {
@@ -83,17 +79,4 @@ public class FileTreeContextAdvisor implements StreamAdvisor {
     }
 }
 
-
-
-
-
-
 // System Prompt + File Tree + User message
-
-
-
-
-
-
-
-

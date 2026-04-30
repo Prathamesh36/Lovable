@@ -3,7 +3,7 @@ package com.portfolio.project.common_lib.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @Getter
 public enum ProjectPermission {
 
@@ -14,6 +14,9 @@ public enum ProjectPermission {
     MANAGE_MEMBERS("project_members:manage"),
     VIEW_MEMBERS("project_members:view");
 
-
     private final String value;
+
+    ProjectPermission(String value) {
+        this.value = value;
+    }
 }
