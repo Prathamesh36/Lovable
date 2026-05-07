@@ -1,13 +1,14 @@
 package com.portfolio.project.workspace_service.service;
 
 
+import com.portfolio.project.common_lib.dto.FileTreeDto;
 import com.portfolio.project.workspace_service.dto.project.FileContentResponse;
 import com.portfolio.project.workspace_service.dto.project.FileTreeResponse;
 
 public interface ProjectFileService {
-    FileTreeResponse getFileTree(Long projectId);
+    FileTreeDto getFileTree(Long projectId);
 
-    FileContentResponse getFileContent(Long projectId, String path);
+    String getFileContent(Long projectId, String path);
 
     void saveFile(Long projectId, String filePath, String fileContent);
 }

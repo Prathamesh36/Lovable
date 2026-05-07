@@ -1,6 +1,7 @@
 package com.portfolio.project.workspace_service.mapper;
 
-import com.portfolio.project.workspace_service.dto.project.FileNode;
+
+import com.portfolio.project.common_lib.dto.FileNode;
 import com.portfolio.project.workspace_service.entity.ProjectFile;
 import org.mapstruct.Mapper;
 

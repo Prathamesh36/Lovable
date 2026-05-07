@@ -25,14 +25,7 @@ spring:
       port: 6380
 
   ai:
-    openai:
-      api-key: ${OPENAI_API_KEY}
-      base-url: https://openrouter.ai/api
-      chat:
-        options:
-          model: openrouter/free
-          temperature: 0.0  # Adjust as needed for creativity (0.0 = deterministic, higher values = more creative)
-jwt:
+    openai:jwt:
   secret-key: ${JWT_SECRET_KEY}
 
 
@@ -41,6 +34,13 @@ stripe:
     secret: ${STRIPE_SECRET_KEY}
   webhook:
     secret: ${STRIPE_WEBHOOK_SECRET}
+      api-key: ${OPENAI_API_KEY}
+      base-url: https://openrouter.ai/api
+      chat:
+        options:
+          model: openrouter/free
+          temperature: 0.0  # Adjust as needed for creativity (0.0 = deterministic, higher values = more creative)
+
 
 client:
   url: http://localhost:8000
@@ -55,4 +55,4 @@ minio:
   access-key: ${MINIO_ACCESS_KEY:minioadmin}
   secret-key: ${MINIO_SECRET_KEY:minioadmin123}
   project-bucket: projects
-
+

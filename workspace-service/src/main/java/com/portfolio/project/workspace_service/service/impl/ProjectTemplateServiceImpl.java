@@ -27,7 +27,7 @@ public class ProjectTemplateServiceImpl implements ProjectTemplateService {
 
     private static final String TEMPLATE_BUCKET = "starter-projects";
     private static final String TARGET_BUCKET = "projects";
-    private static final String TEMPLATE_NAME = "react-vite-tailwind-daisyui-starter";
+    private static final String TEMPLATE_NAME = "react-vite-tailwind-daisyui-starter-main";
 
 
     @Override
@@ -77,7 +77,13 @@ public class ProjectTemplateServiceImpl implements ProjectTemplateService {
                 filesToSave.add(pf);
             }
 
+            if (filesToSave.isEmpty()) {
+                throw new IllegalStateException("No template files found in MinIO bucket " + TEMPLATE_BUCKET
+                        + " with prefix " + TEMPLATE_NAME + "/");
+            }
+
             projectFileRepository.saveAll(filesToSave);
+            log.info("Initialized project {} with {} template files", projectId, filesToSave.size());
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to initialize project from template", e);

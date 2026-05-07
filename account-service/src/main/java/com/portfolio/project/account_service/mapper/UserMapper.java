@@ -15,6 +15,7 @@ public interface UserMapper {
     User toEntity(SignupRequest signupRequest);
 
     @Mapping(source = "userId", target = "id")
+    @Mapping(target = "name", expression = "java(user.name())")
     UserProfileResponse toUserProfileResponse(JwtUserPrincipal user);
 
     UserDto toUserDto(User user);

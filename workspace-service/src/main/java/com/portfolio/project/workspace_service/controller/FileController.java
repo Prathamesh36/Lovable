@@ -1,6 +1,7 @@
 package com.portfolio.project.workspace_service.controller;
 
 
+import com.portfolio.project.common_lib.dto.FileTreeDto;
 import com.portfolio.project.workspace_service.dto.project.FileContentResponse;
 import com.portfolio.project.workspace_service.dto.project.FileTreeResponse;
 import com.portfolio.project.workspace_service.service.ProjectFileService;
@@ -16,12 +17,12 @@ public class FileController {
     private final ProjectFileService projectFileService;
 
     @GetMapping
-    public ResponseEntity<FileTreeResponse> getFileTree(@PathVariable Long projectId) {
+    public ResponseEntity<FileTreeDto> getFileTree(@PathVariable Long projectId) {
         return ResponseEntity.ok(projectFileService.getFileTree(projectId));
     }
 
     @GetMapping("/content")
-    public ResponseEntity<FileContentResponse> getFile(
+    public ResponseEntity<String> getFile(
             @PathVariable Long projectId,
             @RequestParam String path) {
         return ResponseEntity.ok(projectFileService.getFileContent(projectId, path));
