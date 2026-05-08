@@ -1,7 +1,9 @@
 package com.portfolio.project.intelligence_service.service.impl;
 
+import com.portfolio.project.common_lib.enums.ChatEventStatus;
 import com.portfolio.project.common_lib.enums.ChatEventType;
 import com.portfolio.project.common_lib.enums.MessageRole;
+import com.portfolio.project.common_lib.event.FileStoreRequestEvent;
 import com.portfolio.project.common_lib.security.AuthUtil;
 import com.portfolio.project.intelligence_service.client.WorkspaceClient;
 import com.portfolio.project.intelligence_service.dto.chat.StreamResponse;
@@ -22,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.metadata.Usage;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -29,7 +32,10 @@ import reactor.core.scheduler.Schedulers;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
+
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +51,7 @@ public class AiGenerationServiceImpl implements AiGenerationService {
     private final ChatEventRepository chatEventRepository;
     private final UsageService usageService;
     private final WorkspaceClient workspaceClient;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
 
     @Override
@@ -97,7 +104,7 @@ public class AiGenerationServiceImpl implements AiGenerationService {
 //                        parseAndSaveFiles(fullResponseBuffer.toString(), projectId);
 
                         long duration = (endTime.get() - startTime.get()) /  1000;
-                        finalizeChats(userMessage, chatSession, fullResponseBuffer.toString(), duration, usageRef.get());
+                        finalizeChats(userMessage, chatSession, fullResponseBuffer.toString(), duration, usageRef.get(), userId);
                     });
                 })
                 .doOnError(error -> log.error("Error during streaming for projectId: {}", projectId))
@@ -107,7 +114,7 @@ public class AiGenerationServiceImpl implements AiGenerationService {
                 });
     }
 
-    private void finalizeChats(String userMessage, ChatSession chatSession, String fullText, Long duration, Usage usage) {
+    private void finalizeChats(String userMessage, ChatSession chatSession, String fullText, Long duration, Usage usage, Long userId) {
         Long projectId = chatSession.getId().getProjectId();
 
         if(usage != null) {
@@ -136,16 +143,27 @@ public class AiGenerationServiceImpl implements AiGenerationService {
 
         List<ChatEvent> chatEventList = llmResponseParser.parseChatEvents(fullText, assistantChatMessage);
         chatEventList.addFirst(ChatEvent.builder()
-                        .type(ChatEventType.THOUGHT)
-                        .chatMessage(assistantChatMessage)
-                        .content("Thought for "+duration+"s")
-                        .sequenceOrder(0)
+                .type(ChatEventType.THOUGHT)
+                .status(ChatEventStatus.CONFIRMED)
+                .chatMessage(assistantChatMessage)
+                .content("Thought for "+duration+"s")
+                .sequenceOrder(0)
                 .build());
 
         chatEventList.stream()
                 .filter(e -> e.getType() == ChatEventType.FILE_EDIT)
                 .forEach(e -> {
-//                    projectFileService.saveFile(projectId, e.getFilePath(), e.getContent()); TODO: kafka
+                    String sagaId = UUID.randomUUID().toString();
+                    e.setSagaId(sagaId);
+                    FileStoreRequestEvent fileStoreRequestEvent = new FileStoreRequestEvent(
+                            projectId,
+                            sagaId,
+                            e.getFilePath(),
+                            e.getContent(),
+                            userId
+                    );
+                    log.info("Storage request event sent: {}", e.getFilePath());
+                    kafkaTemplate.send("file-storage-request-event", "project-"+projectId, fileStoreRequestEvent);
                 });
 
         chatEventRepository.saveAll(chatEventList);

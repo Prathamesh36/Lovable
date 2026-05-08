@@ -1,9 +1,11 @@
 package com.portfolio.project.intelligence_service.entity;
 
+import com.portfolio.project.common_lib.enums.ChatEventStatus;
 import com.portfolio.project.common_lib.enums.ChatEventType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
 
 @Entity
 @Table(name = "chat_events")
@@ -37,5 +39,11 @@ public class ChatEvent {
 
     @Column(columnDefinition = "text")
     String metadata;
+
+    String sagaId;
+
+    @Enumerated(EnumType.STRING)
+//    @Column(nullable = false)
+    ChatEventStatus status;
 
 }
